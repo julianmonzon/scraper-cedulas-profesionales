@@ -4,7 +4,10 @@ from tkinter import messagebox
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from multiprocessing import Process
-from cedulas_profesionales.spiders.cedulas_profesionales import CedulasProfesionalesSpider
+from cedulas_profesionales.spiders.cedulas_profesionales import (
+    CedulasProfesionalesSpider,
+)
+
 
 class Application(tk.Tk):
     def __init__(self):
@@ -15,7 +18,7 @@ class Application(tk.Tk):
         self.create_widgets()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.is_scraping = False
-        self.is_searching = True  # Flag to track if we are searching or showing results
+        self.is_searching = True
 
     def create_widgets(self):
         """Create widgets for user input and search button."""
@@ -31,7 +34,9 @@ class Application(tk.Tk):
         self.materno_entry = tk.Entry(self)
         self.materno_entry.grid(row=2, column=1, padx=10, pady=10)
 
-        self.search_button = tk.Button(self, text="Buscar", command=self.handle_search_button)
+        self.search_button = tk.Button(
+            self, text="Buscar", command=self.handle_search_button
+        )
         self.search_button.grid(row=3, column=0, columnspan=2, pady=20)
 
         self.reset_button = tk.Button(self, text="Reset", command=self.reset_fields)
@@ -62,14 +67,18 @@ class Application(tk.Tk):
                 self.is_scraping = True
                 settings = get_project_settings()
                 process = CrawlerProcess(settings=settings)
-                process.crawl(CedulasProfesionalesSpider, nombre=nombre, paterno=paterno, materno=materno)
+                process.crawl(
+                    CedulasProfesionalesSpider,
+                    nombre=nombre,
+                    paterno=paterno,
+                    materno=materno,
+                )
                 process.start(stop_after_crawl=True)
                 self.is_scraping = False
 
             process = Process(target=run_spider)
             process.start()
 
-            # Cambia el texto del botón a "Mostrar Resultados" después de iniciar el scraper
             self.search_button.config(text="Mostrar Resultados")
             self.is_searching = False
 
@@ -78,9 +87,9 @@ class Application(tk.Tk):
 
     def read_results(self):
         """Read the results from the text file and display them in the Text widget."""
-        results_path = os.path.join(os.getcwd(), 'results.txt')
+        results_path = os.path.join(os.getcwd(), "results.txt")
         if os.path.exists(results_path):
-            with open(results_path, 'r', encoding='utf-8') as f:
+            with open(results_path, "r", encoding="utf-8") as f:
                 self.results_text.delete("1.0", tk.END)
                 self.results_text.insert(tk.END, f.read())
         else:
@@ -93,14 +102,14 @@ class Application(tk.Tk):
         self.paterno_entry.delete(0, tk.END)
         self.materno_entry.delete(0, tk.END)
         self.results_text.delete("1.0", tk.END)
-        # Restablecer el estado de scraping
         self.is_scraping = False
         self.is_searching = True
-        self.search_button.config(text="Buscar")  # Cambia el texto del botón a "Buscar"
+        self.search_button.config(text="Buscar")
 
     def on_closing(self):
         """Handle the closing of the window."""
         self.destroy()
+
 
 if __name__ == "__main__":
     app = Application()

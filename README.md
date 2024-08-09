@@ -1,6 +1,6 @@
-# Setting Up a Virtual Environment and Running a Web Scraping Process
+# Scraper-Cedulas-Profesionales
 
-This README.md provides a step-by-step guide on how to set up a virtual environment and run a web scraping process using Python and Scrapy.
+This project is a scraper dedicated to obtaining information about professional licenses of professionals in Mexico who are registered with the SEP (Secretary of Public Education). Since it is a school project, a local interface is included to run it locally.
 
 ## Prerequisites
 
